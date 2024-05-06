@@ -1,0 +1,7 @@
+@font-face {
+  font-family: "Felfel";
+  src: url("/fonts/Felfel.woff2") format("woff2"),
+    url("/fonts/Felfel.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
