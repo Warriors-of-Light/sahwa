@@ -1,3 +1,3 @@
 ## اول منصة عربية مفتوحة للصحوة العربية
 
-![Sahwa](assets/Sahwa.jpg)
+![Sahwa](src/assets/Sahwa.jpg)

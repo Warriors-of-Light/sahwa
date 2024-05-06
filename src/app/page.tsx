@@ -39,7 +39,7 @@ export default function Home() {
         </div>
         <a href="https://forms.gle/a6XGDJCG3SR83vxD8" target="_blank">
           <div className="relative bg-blue-500 rounded-md  px-3 py-1 text-2xl mt-10 flex-row flex justify-center items-center cursor-pointer">
-            بلغني عند الانطلاق
+            بلغني عند الاطلاق
             <Icon
               type="mail"
               size={20}
