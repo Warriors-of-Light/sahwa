@@ -70,8 +70,13 @@ export default function Home() {
             <span className=" m-5">تعَرف اكثر هنا</span>
           </div>
 
-          <div className="mt-10 ml-4">
-            <iframe src="" width="170" height="30" title="GitHub"></iframe>
+          <div className="mt-10 ml-10">
+            <iframe
+              src="https://ghbtns.com/github-btn.html?user=haythamhakim&repo=sahwa&type=star&count=true&size=large"
+              width="170"
+              height="30"
+              title="GitHub"
+            ></iframe>
           </div>
         </a>
       </div>
