@@ -9,6 +9,7 @@ import { RiPsychotherapyFill } from "react-icons/ri";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { MdDesignServices } from "react-icons/md";
 import { PiFilmReel } from "react-icons/pi";
+import { CiMail } from "react-icons/ci";
 
 const Icon = (params: {
   type?: string;
@@ -35,6 +36,8 @@ const Icon = (params: {
       return <FaChalkboardTeacher className={style} size={size} />;
     case "film":
       return <PiFilmReel className={style} size={size} />;
+    case "mail":
+      return <CiMail className={style} size={size} />;
   }
 };
 

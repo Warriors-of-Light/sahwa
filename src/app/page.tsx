@@ -1,29 +1,60 @@
 import Image from "next/image";
-import logo from "../assets/logo.svg";
+import logo from "../assets/logo2.svg";
 import CardGrid from "@/components/cardGrid";
 import Card from "@/components/card";
 import "../styles/fonts.css";
+import { Icon } from "@/components/icon";
 
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-white">
       <div className=" items-center justify-center flex flex-col">
-        <Image src={logo} alt="Log" width={400} height={400} layout="fixed" />
+        <Image
+          className=" animate-pulse"
+          src={logo}
+          alt="Log"
+          width={400}
+          height={400}
+          layout="fixed"
+        />
         <div>
           <span
             style={{ fontFamily: "Felfel" }}
-            className=" text-black text-7xl text-center mt-10 relative flex font-felfel "
+            className=" text-black text-7xl text-center mt-10 relative flex "
           >
             منصة صحوة
           </span>
         </div>
-        <div className="relative bg-yellow-100 rounded-full px-3 py-1 text-2xl mt-10 leading-6 text-gray-600 ring-1 ring-gray-900/10 animate-pulse hover:ring-gray-900/20">
+        <div>
+          <span
+            style={{ fontFamily: "Felfel" }}
+            className="text-black text-2xl text-center mt-2 relative flex "
+          >
+            اول منصة تعليمية تفاعلية مفتوحة مبنية بأيدي عربية
+          </span>
+        </div>
+
+        <div className="relative bg-yellow-100 rounded-full px-3 py-1 text-2xl mt-10 leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
           قريباً
+        </div>
+        <a href="https://forms.gle/a6XGDJCG3SR83vxD8" target="_blank">
+          <div className="relative bg-blue-500 rounded-md  px-3 py-1 text-2xl mt-10 flex-row flex justify-center items-center cursor-pointer">
+            بلغني عند الانطلاق
+            <Icon
+              type="mail"
+              size={20}
+              style=" flex text-white ml-4 stroke-2"
+            />
+          </div>
+        </a>
+
+        <div className="relative text-black px-3 py-1 text-2xl mt-10 flex-row flex justify-center items-center">
+          او{" "}
         </div>
         <div>
           <span
             style={{ fontFamily: "Felfel" }}
-            className=" text-black text-4xl text-center mt-10 relative flex font-felfel "
+            className=" text-black text-4xl text-center mt-10 relative flex"
           >
             ابني معنا
           </span>
@@ -66,7 +97,7 @@ export default function Home() {
           href="https://www.notion.so/haythamhakim/30c48e986b064e01a8f783ea16730c0d?pvs=4"
           target="_blank"
         >
-          <div className="relative bg-red-500 hover:bg-red-700 rounded-full px-3 py-1 text-2xl mt-10 ">
+          <div className="relative bg-red-500 hover:bg-red-700 rounded-lg px-3 py-1 text-2xl mt-10 animate-bounce">
             <span className=" m-5">تعَرف اكثر هنا</span>
           </div>
 
