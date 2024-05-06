@@ -1,8 +1,8 @@
 import Image from "next/image";
 import logo from "../assets/logo.svg";
-import "../styles/fonts.css";
 import CardGrid from "@/components/cardGrid";
 import Card from "@/components/card";
+import "../styles/fonts.css";
 
 export default function Home() {
   return (
