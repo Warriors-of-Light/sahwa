@@ -6,10 +6,11 @@ import { getAuth, signInWithPopup } from "firebase/auth";
 
 import "../../styles/fonts.css";
 import { useUserStore } from "@/store/useUserStore";
-import firebase_app from "@/firebase/config";
+import firebase_app, { db } from "@/firebase/config";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import continueWithGoogleImage from "../../assets/continuewithgoogle.svg";
+import { addDoc, collection } from "firebase/firestore";
 
 export default function Login() {
   const provider = new GoogleAuthProvider();
@@ -25,7 +26,7 @@ export default function Login() {
   function continueWithGoogle() {
     const auth = getAuth();
     signInWithPopup(auth, provider)
-      .then((result) => {
+      .then(async (result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential?.accessToken;
@@ -33,6 +34,16 @@ export default function Login() {
         const user = result.user;
         setUser(user);
         router.push("/profile");
+
+        try {
+          await addDoc(collection(db, "Users"), {
+            email: user.email,
+            name: user.displayName,
+            photoURL: user.photoURL,
+          });
+        } catch (e) {
+          console.error("Error adding document: ", e);
+        }
       })
       .catch((error) => {
         alert("Could not sign in");
