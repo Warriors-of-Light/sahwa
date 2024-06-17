@@ -30,7 +30,7 @@ export const CoursCard:FC<{data: coursDetails}> = ({data})=>{
                                     return <FaRegStar color="#FFDF36" className="w-[30px] h-[30px]"/>;
                             })}
                         </div>
-                        <p>(١٠٠ تقيم)</p>
+                        <p>({data.nbrOfRaters} تقيم)</p>
                     </div>
                     <Image src={Flag} alt="flag" className="w-[30px] h-[30px]"/>
                 </div>
