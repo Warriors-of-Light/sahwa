@@ -24,7 +24,7 @@ export const CoursCard:FC<{data: coursDetails}> = ({data})=>{
                     <div className="flex flex-row-reverse items-center gap-2">
                         <div className="flex flex-row-reverse">
                             {Array.from(Array(5)).map((_, i)=>{
-                                if(i <= data.rating)
+                                if(i+1 <= data.rating)
                                     return <FaStar color="#FFDF36" className="w-[30px] h-[30px]"/>;
                                 else
                                     return <FaRegStar color="#FFDF36" className="w-[30px] h-[30px]"/>;
