@@ -10,7 +10,7 @@ import firebase_app, { db } from "@/firebase/config";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import continueWithGoogleImage from "../../assets/continuewithgoogle.svg";
-import { addDoc, collection } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 
 export default function Login() {
   const provider = new GoogleAuthProvider();
@@ -36,11 +36,16 @@ export default function Login() {
         router.push("/profile");
 
         try {
-          await addDoc(collection(db, "Users"), {
-            email: user.email,
-            name: user.displayName,
-            photoURL: user.photoURL,
-          });
+          const docRef = doc(db, "Users", user.email!);
+          const docSnap = await getDoc(docRef);
+
+          if (!docSnap.exists()) {
+            await setDoc(docRef, {
+              email: user.email,
+              name: user.displayName,
+              photoURL: user.photoURL,
+            });
+          }
         } catch (e) {
           console.error("Error adding document: ", e);
         }
