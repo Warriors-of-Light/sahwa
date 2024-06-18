@@ -1,9 +1,11 @@
 import { coursDetails } from "@/types/coursDetails.type";
 import { FC } from "react";
 import { FaStar } from "react-icons/fa";
-import Flag from "@/assets/flag.svg";
+import FlagAR from "@/assets/flag_ar.svg";
+import FlagEN from "@/assets/flag_en.svg";
 import Image from "next/image";
 import { FaRegStar } from "react-icons/fa";
+// import { v4 as uuidv4 } from 'uuid';
 
 
 export const CoursCard:FC<{data: coursDetails}> = ({data})=>{
@@ -32,7 +34,14 @@ export const CoursCard:FC<{data: coursDetails}> = ({data})=>{
                         </div>
                         <p>({data.nbrOfRaters} تقيم)</p>
                     </div>
-                    <Image src={Flag} alt="flag" className="w-[30px] h-[30px]"/>
+                    <div className="flex justify-center items-center gap-3">
+                        {data.languages.map((lang)=>{
+                            if(lang === "arabic")
+                                return <Image src={FlagAR} alt="flag" className="w-[30px] h-[30px]"/>
+                            else if(lang === "english")
+                                return <Image src={FlagEN} alt="flag" className="w-[30px] h-[30px]"/>
+                        })}
+                    </div>
                 </div>
             </div>
             <div className="flex flex-row-reverse">
@@ -46,6 +55,6 @@ export const CoursCard:FC<{data: coursDetails}> = ({data})=>{
             </div>
         </div>
         {/* card footer */}
-        <p className="text-right p-3 border-black border-[3px] rounded-[4px] border-b-0 border-r-0 border-l-0 basis-1/6"> مقدم من {data.trainer}</p>
+        <p className="text-right p-3 border-black border-[3px] rounded-[4px] border-b-0 border-r-0 border-l-0 basis-1/6"> مقدم من {data.instructor.firstName} {data.instructor.lastName}</p>
     </div>
 }
