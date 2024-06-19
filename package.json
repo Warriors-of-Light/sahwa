@@ -21,6 +21,7 @@
     "firebase": "^10.12.2",
     "framer-motion": "^11.2.11",
     "lucide-react": "^0.395.0",
+    "@nextui-org/accordion": "^2.0.35",
     "next": "14.2.3",
     "postcss-scss": "^4.0.9",
     "react": "^18",

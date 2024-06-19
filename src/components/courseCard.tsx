@@ -38,7 +38,7 @@ export const CourseCard:FC<ICourseCard> = ({data})=>{
                     </div>
                     <div className="flex justify-center items-center gap-3">
                         {data.languages.map((lang)=>{
-                            return <LanguageFlag language={lang} key={uuidv4()}/>
+                            return <a key={uuidv4()} href={"/courses/"+lang+"/" + data.id}><LanguageFlag language={lang} key={uuidv4()}/></a>
                         })}
                     </div>
                 </div>

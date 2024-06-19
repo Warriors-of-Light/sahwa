@@ -37,9 +37,9 @@ export const CoursCard:FC<{data: coursDetails}> = ({data})=>{
                     <div className="flex justify-center items-center gap-3">
                         {data.languages.map((lang)=>{
                             if(lang === "arabic")
-                                return <Image src={FlagAR} alt="flag" className="w-[30px] h-[30px]"/>
+                                return <a href={"/courses/ar/" + data.id}><Image src={FlagAR} alt="flag" className="w-[30px] h-[30px]"/></a>
                             else if(lang === "english")
-                                return <Image src={FlagEN} alt="flag" className="w-[30px] h-[30px]"/>
+                                return <a href={"/courses/en/" + data.id}><Image src={FlagEN} alt="flag" className="w-[30px] h-[30px]"/></a>
                         })}
                     </div>
                 </div>
