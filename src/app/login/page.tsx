@@ -1,6 +1,5 @@
 "use client";
 import Image from "next/image";
-import logo from "../../assets/logo2.svg";
 import { GoogleAuthProvider } from "firebase/auth";
 import { getAuth, signInWithPopup } from "firebase/auth";
 
@@ -11,6 +10,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import continueWithGoogleImage from "../../assets/continuewithgoogle.svg";
 import { doc, getDoc, setDoc } from "firebase/firestore";
+import Header from "@/components/header";
 
 export default function Login() {
   const provider = new GoogleAuthProvider();
@@ -59,73 +59,28 @@ export default function Login() {
       });
   }
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-white">
-      <div className=" items-center justify-center flex flex-col">
-        <Image
-          className=""
-          src={logo}
-          alt="Log"
-          width={200}
-          height={200}
-          layout="fixed"
-        />
-        <div>
-          <span
-            style={{ fontFamily: "Felfel" }}
-            className=" text-black text-4xl text-center mt-5 relative flex "
-          >
-            منصة صحوة
-          </span>
-        </div>
-        <div className="flex flex-col mt-10">
-          <span
-            style={{ fontFamily: "Felfel" }}
-            className="text-black text-2xl ml-4 text-right"
-          >
-            الايميل
-          </span>
-          <input
-            id="email"
-            type="email"
-            className="ring-2 ring-red-500 rounded-sm w-[250px] h-[30px] text-black p-2"
-          />
-          <span
-            style={{ fontFamily: "Felfel" }}
-            className="text-black text-2xl ml-4 mt-4 text-right"
-          >
-            كلمة السر
-          </span>
-          <input
-            id="email"
-            type="password"
-            className="ring-2 ring-red-500 rounded-sm w-[250px] h-[30px] text-black p-2"
-          />
-        </div>
-        <div className="mt-4">
-          <span
-            style={{ fontFamily: "Felfel" }}
-            className="text-black text-2xl "
-          >
-            او
-          </span>
-        </div>
+    <main className="flex min-h-screen flex-col items-center justify-center p-24 bg-white">
+      <div className=" bg-white z-10 w-full absolute top-0 ">
+        <Header displayLogin={false} />
+      </div>
+      <div className="items-center relative  flex flex-col mt-24">
+        <span className="  text-7xl text-black" style={{ fontFamily: "Cairo" }}>
+          اهلا وسهلاً
+        </span>
+        <span
+          className="  text-2xl text-black mt-7 w-[600px] text-center"
+          style={{ fontFamily: "Cairo" }}
+        >
+          منصة تعليمية مفتوحة للنهضة بالأمة العربية
+        </span>
+
+        <div className="mt-8" />
         <Image
           onClick={continueWithGoogle}
           src={continueWithGoogleImage}
           alt="Continue With Google"
           className=" cursor-pointer"
         />
-
-        <div>
-          <a href="/profile">
-            <div
-              style={{ fontFamily: "Felfel" }}
-              className=" bg-yellow-400 w-40 p-2 rounded-full mt-6 text-center align-middle text-black text-3xl hover:bg-yellow-300 cursor-pointer"
-            >
-              نوّرتنا
-            </div>
-          </a>
-        </div>
       </div>
     </main>
   );
