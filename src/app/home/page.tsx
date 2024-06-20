@@ -130,7 +130,7 @@ export default function Home() {
           <BentoCard key={feature.name} {...feature} />
         ))}
       </BentoGrid>
-      <div className="w-full justify-center">
+      <div className="min-w-screen justify-center">
         <Image src={sahwaLong} alt="long sahwa" />
       </div>
     </main>
