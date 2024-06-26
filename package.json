@@ -21,6 +21,7 @@
     "firebase": "^10.12.2",
     "framer-motion": "^11.2.11",
     "lucide-react": "^0.395.0",
+    "luxon": "^3.4.4",
     "next": "14.2.3",
     "postcss-scss": "^4.0.9",
     "react": "^18",
@@ -32,6 +33,7 @@
     "zustand": "^4.5.2"
   },
   "devDependencies": {
+    "@types/luxon": "^3.4.2",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
