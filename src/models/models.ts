@@ -2,14 +2,18 @@ import { DateTime } from "luxon";
 import { Country } from "./types";
 
 export interface IUser {
-  firstName: string;
-  lastName: string;
+  name: string;
   id: string;
-  nationality: Country;
-  email: string;
+  country: Country;
   birthdate: string;
+  courses: Array<string>;
+  dateJoined: string;
+  username: string;
+  role: "student" | "instructor" | "admin" | "TA";
   bio?: string;
-  interests?: [];
+  interests?: Array<string>;
+  personalityType: string;
+  friends?: Array<string>;
 }
 
 export interface IInstructor extends IUser {

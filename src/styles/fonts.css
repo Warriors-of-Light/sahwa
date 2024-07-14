@@ -5,3 +5,17 @@
   font-weight: normal;
   font-style: normal;
 }
+
+@font-face {
+  font-family: "Ghaith";
+  src: url("/fonts/Ghaith.otf") format("opentype");
+  font-weight: bolder;
+  font-style: bolder;
+}
+
+@font-face {
+  font-family: "Cairo";
+  src: url("/fonts/Cairo.ttf") format("truetype");
+  font-weight: bolder;
+  font-style: bolder;
+}
