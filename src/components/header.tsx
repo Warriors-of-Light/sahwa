@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { SahwaUser } from "@/models/types";
 import { Dialog, DialogPanel } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import sahwaLogo from "../assets/sahwa.svg";
 import Image from "next/image";
-import { SahwaUser } from "@/constants";
+import { useState } from "react";
+import sahwaLogo from "../assets/sahwa.svg";
 
 interface IHeaderProps {
   displayLogin?: boolean;
+  displayPages?: boolean;
   user?: SahwaUser;
 }
 
@@ -17,7 +18,11 @@ const navigation = [
   { name: "مسارات التعلم", href: "#" },
 ];
 
-export default function Header({ user, displayLogin }: IHeaderProps) {
+export default function Header({
+  user,
+  displayLogin,
+  displayPages = true,
+}: IHeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -45,19 +50,22 @@ export default function Header({ user, displayLogin }: IHeaderProps) {
             <Bars3Icon className="h-6 w-6" aria-hidden="true" />
           </button>
         </div>
-        <div className="hidden lg:flex lg:gap-x-12">
-          {navigation.map((item) => (
-            <a
-              key={item.name}
-              href={item.href}
-              className=" font-semibold leading-6 text-gray-900 text-xl"
-            >
-              {item.name}
-            </a>
-          ))}
-        </div>
+        {displayPages && (
+          <div className="hidden lg:flex lg:gap-x-12">
+            {navigation.map((item) => (
+              <a
+                key={item.name}
+                href={item.href}
+                style={{ fontFamily: "Cairo" }}
+                className=" font-semibold leading-6 text-gray-900 text-xl"
+              >
+                {item.name}
+              </a>
+            ))}
+          </div>
+        )}
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          <a href="/home">
+          <a href="/landing">
             <Image
               src={sahwaLogo}
               className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900"

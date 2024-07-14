@@ -1,16 +1,15 @@
 "use client";
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import Image from "next/image";
-import { GoogleAuthProvider } from "firebase/auth";
-import { getAuth, signInWithPopup } from "firebase/auth";
 
-import "../../styles/fonts.css";
-import { useUserStore } from "@/store/useUserStore";
-import firebase_app, { db } from "@/firebase/config";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import continueWithGoogleImage from "../../assets/continuewithgoogle.svg";
-import { doc, getDoc, setDoc } from "firebase/firestore";
 import Header from "@/components/header";
+import firebase_app, { db } from "@/firebase/config";
+import { useUserStore } from "@/store/useUserStore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import continueWithGoogleImage from "../../assets/continuewithgoogle.svg";
+import "../../styles/fonts.css";
 
 export default function Login() {
   const provider = new GoogleAuthProvider();
@@ -22,18 +21,14 @@ export default function Login() {
 
   const { setUser } = useUserStore();
 
-  // TODO: refactor in a seperate function under firebase/auth
   function continueWithGoogle() {
     const auth = getAuth();
     signInWithPopup(auth, provider)
       .then(async (result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential?.accessToken;
         console.log(token);
         const user = result.user;
-        setUser(user);
-        router.push("/profile");
 
         try {
           const docRef = doc(db, "Users", user.email!);
@@ -44,7 +39,16 @@ export default function Login() {
               email: user.email,
               name: user.displayName,
               photoURL: user.photoURL,
+              id: user.uid,
+              phoneNumber: user.phoneNumber,
             });
+          }
+          const userDoc = await docSnap.data();
+          setUser(userDoc ?? user);
+          if (userDoc && userDoc.username === undefined) {
+            router.push("/createstudent");
+          } else {
+            router.push("/home");
           }
         } catch (e) {
           console.error("Error adding document: ", e);
@@ -64,7 +68,10 @@ export default function Login() {
         <Header displayLogin={false} />
       </div>
       <div className="items-center relative  flex flex-col mt-24">
-        <span className="  text-7xl text-black" style={{ fontFamily: "Cairo" }}>
+        <span
+          className="  text-7xl text-black"
+          style={{ fontFamily: "Ghaith" }}
+        >
           اهلا وسهلاً
         </span>
         <span

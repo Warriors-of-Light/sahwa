@@ -1,4 +1,4 @@
-import { SahwaUser } from "@/constants";
+import { SahwaUser } from "@/models/types";
 import { create } from "zustand";
 import { createJSONStorage, devtools, persist } from "zustand/middleware";
 
