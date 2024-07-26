@@ -7,6 +7,8 @@ import { DateTime } from "luxon";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import "../../styles/fonts.css";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import { LineChart, CartesianGrid, XAxis, Line, YAxis } from "recharts"
 
 export default function Home() {
   const router = useRouter();
@@ -24,6 +26,23 @@ export default function Home() {
     // Check if the current time is within the morning range
     return currentTime >= morningStart && currentTime < morningEnd;
   }
+
+  const chartConfig = {
+    hours: {
+      label: "ساعات",
+      color: "hsl(var(--chart-1))",
+    },
+  }
+
+  const chartData = [
+    { month: "جمعة", hours: 2.1 },
+    { month: "خميس", hours: 2 },
+    { month: "اربعاء", hours: 3.7 },
+    { month: "ثلاثاء", hours: 0.7 },
+    { month: "اثنين", hours: 3.2 },
+    { month: "احد", hours: 1.9 },
+    { month: "سبت", hours: 4 }
+  ]
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-start p-24 bg-white">
@@ -70,7 +89,55 @@ export default function Home() {
           />
         </div>
       </div>
-      +
+      {/* + */}
+      <div className="w-full flex-col justify-end text-right p-4 border-t mt-5 gap-5">
+          <span
+            className="text-black text-xl p-2 mb-5"
+            style={{ fontFamily: "cairo" }}
+          >
+            {" "}
+            نشاطك
+          </span>
+          <ChartContainer config={chartConfig} className="rounded-[20px] w-full h-[300px] bg-[#F7F5E8] px-3 py-6 mt-5">
+            <LineChart
+              accessibilityLayer
+              data={chartData}
+              margin={{
+                left: 12,
+                right: 12,
+              }}
+            >
+              <CartesianGrid vertical={true} horizontal={false} strokeWidth={2}/>
+              <XAxis
+                dataKey="month"
+                tickLine={false}
+                axisLine
+                tickMargin={8}
+                //tickFormatter={(value) => value.slice(0, 3)}
+              />
+              <YAxis
+                dataKey="hours"
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+                orientation="right"
+                scale={"linear"}
+                //tickFormatter={(value) => value.slice(0, 3)}
+              />
+              <ChartTooltip
+                cursor={false}
+                content={<ChartTooltipContent hideLabel/>}
+              />
+              <Line
+                dataKey="hours"
+                type="natural"
+                stroke="var(--color-hours)"
+                strokeWidth={4}
+                dot={false}
+              />
+            </LineChart>
+          </ChartContainer>
+      </div>
       <div className="w-full flex justify-end text-right  p-4">
         <div className="flex flex-col">
           <span
