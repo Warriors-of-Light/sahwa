@@ -10,6 +10,9 @@ const config = {
 	],
   prefix: "",
   theme: {
+    fontFamily:{
+      "cairo": ["Cairo"]
+    },
     container: {
       center: true,
       padding: "2rem",
