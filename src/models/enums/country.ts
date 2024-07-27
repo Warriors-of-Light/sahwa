@@ -1,0 +1,53 @@
+export enum Country {
+    ALGERIA = "ALGERIA",
+    BAHRAIN = "BAHRAIN",
+    COMOROS = "COMOROS",
+    DJIBOUTI = "DJIBOUTI",
+    EGYPT = "EGYPT",
+    IRAQ = "IRAQ",
+    JORDAN = "JORDAN",
+    KUWAIT = "KUWAIT",
+    LEBANON = "LEBANON",
+    LIBYA = "LIBYA",
+    MAURITANIA = "MAURITANIA",
+    MOROCCO = "MOROCCO",
+    OMAN = "OMAN",
+    PALESTINE = "PALESTINE",
+    QATAR = "QATAR",
+    SAUDI_ARABIA = "SAUDI_ARABIA",
+    SOMALIA = "SOMALIA",
+    SUDAN = "SUDAN",
+    SYRIA = "SYRIA",
+    TUNISIA = "TUNISIA",
+    UNITED_ARAB_EMIRATES = "UNITED_ARAB_EMIRATES",
+    YEMEN = "YEMEN",
+}
+
+export const countries: { [key in Country]: string } = {
+    [Country.ALGERIA]: "الجزائر 🇩🇿",
+    [Country.BAHRAIN]: "البحرين 🇧🇭",
+    [Country.COMOROS]: "جزر القمر 🇰🇲",
+    [Country.DJIBOUTI]: "جيبوتي 🇩🇯",
+    [Country.EGYPT]: "مصر 🇪🇬",
+    [Country.IRAQ]: "العراق 🇮🇶",
+    [Country.JORDAN]: "الأردن 🇯🇴",
+    [Country.KUWAIT]: "الكويت 🇰🇼",
+    [Country.LEBANON]: "لبنان 🇱🇧",
+    [Country.LIBYA]: "ليبيا 🇱🇾",
+    [Country.MAURITANIA]: "موريتانيا 🇲🇷",
+    [Country.MOROCCO]: "المغرب 🇲🇦",
+    [Country.OMAN]: "عمان 🇴🇲",
+    [Country.PALESTINE]: "فلسطين 🇵🇸",
+    [Country.QATAR]: "قطر 🇶🇦",
+    [Country.SAUDI_ARABIA]: "السعودية 🇸🇦",
+    [Country.SOMALIA]: "الصومال 🇸🇴",
+    [Country.SUDAN]: "السودان 🇸🇩",
+    [Country.SYRIA]: "سوريا 🇸🇾",
+    [Country.TUNISIA]: "تونس 🇹🇳",
+    [Country.UNITED_ARAB_EMIRATES]: "الإمارات 🇦🇪",
+    [Country.YEMEN]: "اليمن 🇾🇪",
+};
+
+export function getCountryName(country: Country): string {
+    return countries[country];
+}
