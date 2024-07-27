@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { LineChart, CartesianGrid, XAxis, Line, YAxis } from "recharts"
 import { StartedCourse } from "@/components/home/StartedCourse";
+import { SuggestedCourse } from "@/components/home/SuggestedCourse";
 
 export default function Home() {
   const router = useRouter();
@@ -159,6 +160,29 @@ export default function Home() {
             </div>
             <div className="flex items-center gap-3 overflow-x-scroll w-full">
               {[1,2,3,4,5,6].map((i)=><StartedCourse key={i}/>)}
+            </div>
+          </div>
+      </div>
+      {/* suggested courses */}
+      <div className="w-full flex-col justify-end text-right p-4 border-t mt-5 gap-5">
+      <span
+            className="text-black text-xl p-2 mb-5"
+            style={{ fontFamily: "cairo" }}
+          >
+            {" "}
+            كورسات مقترحة 
+          </span>
+          <div className="flex flex-col items-start justify-center gap-5">
+            <div className="w-fit flex justify-center items-center gap-3">
+              <div className="w-[40px] h-[40px] rounded-[50%] bg-gradient-to-r from-[#FF5C00] to-[#E83526] text-center leading-[40px] text-white text-[18px] font-semibold">
+                {"<"}
+              </div>
+              <div className="w-[40px] h-[40px] rounded-[50%] border border-[#E83526] text-center leading-[40px] text-[#E83526] text-[18px] font-semibold">
+                {">"}
+              </div>
+            </div>
+            <div className="flex items-center gap-3 overflow-x-scroll w-full">
+              {[1,2,3,4,5,6].map((i)=><SuggestedCourse key={i}/>)}
             </div>
           </div>
       </div>
