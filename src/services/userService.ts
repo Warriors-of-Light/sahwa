@@ -12,4 +12,3 @@ export const add = async (user: User) => {
         body: JSON.stringify(user),
     });
 };
-
