@@ -1,6 +1,7 @@
 "use client";
 
-import Header from "@/components/header";
+//import Header from "@/components/header";
+import { Header } from "@/components/sharedComponent/Header";
 import { useUserStore } from "@/store/useUserStore";
 import { DateTime } from "luxon";
 import Image from "next/image";
@@ -49,7 +50,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-start p-24 bg-white">
       <div className=" bg-white z-10 w-full absolute top-0 ">
-        <Header displayPages={false} />
+        <Header />
       </div>
       <div className="flex flex-row justify-end items-center p-20 w-screen">
         <span style={{ fontFamily: "cairo" }} className="text-2xl mr-4">
