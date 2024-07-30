@@ -74,6 +74,7 @@ export default function Header({
             />
           </a>
         </div>
+        <div>x</div>
       </nav>
       <Dialog
         className="lg:hidden"

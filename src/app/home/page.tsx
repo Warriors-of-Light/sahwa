@@ -1,6 +1,5 @@
 "use client";
 
-import CourseCard from "@/components/courseCard";
 import Header from "@/components/header";
 import { useUserStore } from "@/store/useUserStore";
 import { DateTime } from "luxon";
@@ -10,6 +9,8 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/
 import { LineChart, CartesianGrid, XAxis, Line, YAxis } from "recharts"
 import { StartedCourse } from "@/components/home/StartedCourse";
 import { SuggestedCourse } from "@/components/home/SuggestedCourse";
+import { ContinueCourse } from "@/components/home/ContinueCourse";
+import avatar from "@/assets/home/userAvatar.png"
 
 export default function Home() {
   const router = useRouter();
@@ -56,41 +57,22 @@ export default function Home() {
         </span>
         <Image
           className="rounded-full ring-2 ring-white"
-          src={user?.photoURL!}
+          src={avatar}
           width={80}
           height={80}
           alt=""
         />
       </div>
-      <div className="w-full flex justify-end text-right -mt-10 border-red-400 border rounded-md bg-red-500 p-4">
-        <div className="flex flex-col">
+      <div className="w-full flex flex-col justify-end text-right -mt-10 ">
           <span
-            className="text-white text-xl p-2 mb-5"
-            style={{ fontFamily: "cairo", fontWeight: "bold" }}
+            className="text-black text-xl p-2 mb-5"
+            style={{ fontFamily: "cairo" }}
           >
             {" "}
             استكمال
           </span>
-          <CourseCard
-            avatars={[
-              user?.photoURL!,
-              user?.photoURL!,
-              user?.photoURL!,
-              user?.photoURL!,
-              user?.photoURL!,
-            ]}
-            course={{
-              name: "تطوير تطبيقات الويب",
-              description: "تعلم كيف تطور تطبيقات الويب بسهولة",
-              enrolledStudents: [],
-              id: "12eandsai8DHSA8DJA9IE10E", // this is not a real id and will come from what we store in our database
-              instructorId: "12eandsai8DHSA8DJA9IE10E", // not real id
-              thumbnail: "/CourseImages/12eandsai8DHSA8DJA9IE10E.jpeg", //not real thumbnail location
-            }}
-          />
-        </div>
+          <ContinueCourse />
       </div>
-      {/* + */}
       {/* chart section */}
       <div className="w-full flex-col justify-end text-right p-4 border-t mt-5 gap-5">
           <span
@@ -185,70 +167,6 @@ export default function Home() {
               {[1,2,3,4,5,6].map((i)=><SuggestedCourse key={i}/>)}
             </div>
           </div>
-      </div>
-      <div className="w-full flex justify-end text-right  p-4">
-        <div className="flex flex-col">
-          <span
-            className="text-black text-xl p-2 mb-5"
-            style={{ fontFamily: "cairo" }}
-          >
-            {" "}
-            الكورسات المقترحة
-          </span>
-          <div className="flex flex-row space-x-4">
-            <CourseCard
-              avatars={[
-                user?.photoURL!,
-                user?.photoURL!,
-                user?.photoURL!,
-                user?.photoURL!,
-                user?.photoURL!,
-              ]}
-              course={{
-                name: "تطوير تطبيقات الويب",
-                description: "تعلم كيف تطور تطبيقات الويب بسهولة",
-                enrolledStudents: [],
-                id: "12eandsai8DHSA8DJA9IE10E",
-                instructorId: "12eandsai8DHSA8DJA9IE10E",
-                thumbnail: "/CourseImages/12eandsai8DHSA8DJA9IE10E.jpeg",
-              }}
-            />
-            <CourseCard
-              avatars={[
-                user?.photoURL!,
-                user?.photoURL!,
-                user?.photoURL!,
-                user?.photoURL!,
-                user?.photoURL!,
-              ]}
-              course={{
-                name: "تطوير تطبيقات الويب",
-                description: "تعلم كيف تطور تطبيقات الويب بسهولة",
-                enrolledStudents: [],
-                id: "12eandsai8DHSA8DJA9IE10E",
-                instructorId: "12eandsai8DHSA8DJA9IE10E",
-                thumbnail: "/CourseImages/12eandsai8DHSA8DJA9IE10E.jpeg",
-              }}
-            />
-            <CourseCard
-              avatars={[
-                user?.photoURL!,
-                user?.photoURL!,
-                user?.photoURL!,
-                user?.photoURL!,
-                user?.photoURL!,
-              ]}
-              course={{
-                name: "تطوير تطبيقات الويب",
-                description: "تعلم كيف تطور تطبيقات الويب بسهولة",
-                enrolledStudents: [],
-                id: "12eandsai8DHSA8DJA9IE10E", // this is not a real id and will come from what we store in our database
-                instructorId: "12eandsai8DHSA8DJA9IE10E", // not real id
-                thumbnail: "/CourseImages/12eandsai8DHSA8DJA9IE10E.jpeg", //not real thumbnail location
-              }}
-            />
-          </div>
-        </div>
       </div>
       <div className="rounded-full ring-2 ring-red-500 hover:bg-red-500 hover:text-white text-red-500 w-32 p-3 text-center cursor-pointer">
         <span
