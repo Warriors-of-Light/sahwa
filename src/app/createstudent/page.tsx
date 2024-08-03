@@ -72,18 +72,20 @@ export default function Profile() {
       e.preventDefault();
       try {
         const user: User = {
-            name,
-            username,
-            email,
-            bio,
-            password,
-            confirm_password,
-            birth_date: dateOfBirth?.toISOString()?.split('T')?.[0],
-            roles_ids: [1],
-            country,
-            personality_type: selectedPersonalityType,
-            interests_ids: selectedInterests.map((e) => e.id),
-        };
+          name,
+          username,
+          email,
+          bio,
+          password,
+          confirm_password,
+          birth_date: dateOfBirth?.toISOString()?.split('T')?.[0],
+          roles_ids: [1],
+          country,
+          personality_type: selectedPersonalityType,
+          // [Oussama] FIXME: correct the types from the interface
+          // @ts-ignore
+          interests_ids: selectedInterests.map((e) => e.id),
+        }
 
         const response = await add(user);
         if (!response.ok) {
