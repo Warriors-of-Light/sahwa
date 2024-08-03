@@ -30,8 +30,7 @@ export async function POST(req: Request) {
 
 export async function GET() {
   try {
-    const allUsers: Array<any> = [];
-    const querySnapshot = await getDocs(collection(db, "Users"));
+    const allUsers: Array<any> = [];    const querySnapshot = await getDocs(collection(db, "Users"));
     querySnapshot.forEach((doc) => {
       allUsers.push(doc.data());
     });

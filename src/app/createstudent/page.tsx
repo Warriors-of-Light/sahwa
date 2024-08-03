@@ -1,81 +1,102 @@
 "use client";
 import SearchBar from "@/components/searchbar";
-import { db } from "@/firebase/config";
-import { Interests, PersonalityTypes } from "@/models/constants";
-import { Country, SahwaUser } from "@/models/types";
+import { Country, countries } from "@/models/enums/country"
+import { personalityTypes } from "@/models/enums/personalityType"
 import { useUserStore } from "@/store/useUserStore";
 import { Select } from "@headlessui/react";
-import { getAuth } from "firebase/auth";
-import { doc, getDoc, setDoc } from "firebase/firestore";
 import { DateTime } from "luxon";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useRef, useState, useEffect } from "react";
+import { fetchTags } from "../../services/tagService";
 import "../../styles/fonts.css";
+import { Tag } from "@/models/interfaces/tag";
+import { PagedResponse } from "@/models/interfaces/pagedResponse";
+import { User } from '@/models/interfaces/user';
+import { add } from '@/services/userService';
 
 export default function Profile() {
   const { user } = useUserStore();
-  const [name, setName] = useState(user?.displayName);
-  const [userName, setUsername] = useState(user?.username);
-  const [bio, setBio] = useState(user?.bio);
-  const [dateOfBirth, setDateOfBirth] = useState(new Date(user?.birthdate!));
-  const [country, setCountry] = useState<Country>("Egypt");
+  const [name, setName] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [bio, setBio] = useState<string>("");
+//[Raouf] FIXME: verifying password and confirm password matching should be handled
+  const [password, setPassword] = useState<string>("");
+  const [confirm_password, setConfirmPassword] = useState<string>("");
+  const [dateOfBirth, setDateOfBirth] = useState<Date>(new Date());
+  const [country, setCountry] = useState<Country>(Country.ALGERIA);
   const [loadMore, setLoadMore] = useState(false);
   const [onMatchRegex, setOnMatchRegex] = useState(false);
-  const [selectedInterests, setSelectedInterests] = useState<Array<string>>(
+  const [interests, setInterests] = useState<Tag[]>([]);
+  const [selectedInterests, setSelectedInterests] = useState<Tag[]>(
     user?.interests ?? []
   );
-
-  const [filteredInterests, setFilteredInterests] = useState<string[]>([
-    ...Interests,
-  ]);
-
+  const [filteredInterests, setFilteredInterests] = useState<Tag[]>([]);
   const [selectedPersonalityType, setSelectedPersonalityType] = useState(
     user?.personalityType ?? ""
   );
 
-  const onSearch = useCallback((filteredResults: string[] | undefined) => {
-    setFilteredInterests(filteredResults ?? [...Interests]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetchTags();
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        // Raouf: for now we get 50 tags and we filter and paginate in the web
+        // if tags will be more than 50, it should be done server side to avoid perf problem
+        // when loading the page to get tags ()
+        const res: PagedResponse<Tag> = await response.json();
+        if (res.status != 200) {
+            throw new Error(res.message);
+        }
+        setInterests(res.list);
+        setFilteredInterests(res.list);
+      } catch (e) {
+        console.error("Error getting tags: ", e);
+      }
+    };
+
+    fetchData();
   }, []);
 
-  // Creating a student profile
-  const profileRef = useRef<SahwaUser>({
-    name: user?.displayName || name || "",
-    birthdate: dateOfBirth.toLocaleString(),
-    username: userName!,
-    role: "student",
-    courses: [],
-    dateJoined: DateTime.now().toLocaleString(),
-    country: country,
-    bio: bio,
-    personalityType: selectedPersonalityType,
-    friends: [],
-    interests: selectedInterests,
-  });
+  const onSearch = useCallback((filteredResults: Tag[] | undefined) => {
+    setFilteredInterests(filteredResults ?? []);
+  }, []);
 
   const router = useRouter();
   const now = DateTime.now().setZone("utc");
-  const auth = getAuth();
 
-  const onSubmit = useCallback(
-    async (e: any) => {
-      console.log(profileRef.current);
+    const onSubmit = async (e: any) => {
       e.preventDefault();
       try {
-        const docRef = doc(db, "Users", user?.email!);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          await setDoc(docRef, {
-            ...docSnap.data(),
-            ...profileRef.current,
-          });
+        const user: User = {
+            name,
+            username,
+            email,
+            bio,
+            password,
+            confirm_password,
+            birth_date: dateOfBirth?.toISOString()?.split('T')?.[0],
+            roles_ids: [1],
+            country,
+            personality_type: selectedPersonalityType,
+            interests_ids: selectedInterests.map((e) => e.id),
+        };
+
+        const response = await add(user);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const res: PagedResponse<Tag> = await response.json();
+        if (res.status != 200) {
+            throw new Error(res.message);
         }
       } catch (e) {
-        console.error("Error adding document: ", e);
+        console.error("Error adding user: ", e);
       }
-    },
-    [user?.email]
-  );
+    };
 
   return (
     <main className="flex min-h-screen min-w-screen flex-col items-center justify-start sm:justify-center p-24  overflow-x-hidden text-black">
@@ -102,10 +123,10 @@ export default function Profile() {
                 </h2>
               </div>
 
-              {(userName || user?.username !== undefined) && (
+              {(username || user?.username !== undefined) && (
                 <div className="flex space-y-2 w-full justify-center">
                   <h2 className="text-center text-lg font-semibold text-gray-900 rounded-full  ring-1 ring-gray-950 w-fit pr-5 pl-5 ">
-                    {`@${userName ?? user?.username}`}
+                    {`@${username ?? user?.username}`}
                   </h2>
                 </div>
               )}
@@ -160,12 +181,12 @@ export default function Profile() {
                   اهتماماتي
                 </label>
                 <div className="flex flex-wrap justify-center">
-                  {selectedInterests.map((interest, key) => (
+                  {selectedInterests.map(interest => (
                     <div
-                      key={key}
+                      key={interest.id}
                       className="rounded-full px-4 py-1 text-center m-1 bg-gradient-to-r from-red-100 to-red-300 ring-gray-800 ring-1 ring-inset"
                     >
-                      {interest}
+                      {interest.name}
                     </div>
                   ))}
                 </div>
@@ -202,17 +223,13 @@ export default function Profile() {
                   placeholder="ابن الهيثم"
                   onChange={(e) => {
                     setName(e.target.value);
-                    profileRef.current = {
-                      ...profileRef.current,
-                      name: e.target.value,
-                    };
                   }}
                   required
                   className="w-full max-w-xs text-right px-2 py-1.5 text-gray-900 rounded-md border-0 shadow-sm ring-1 ring-gray-300 ring-inset focus:ring-red-600 focus:ring-1 "
                 />
               </div>
               <div className="flex flex-col min-w-80">
-                <label htmlFor="name" className="text-lg text-gray-700">
+                <label htmlFor="username" className="text-lg text-gray-700">
                   اسم المستخدم
                 </label>
                 <div className="flex flex-row-reverse rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus: max-w-xs ">
@@ -220,8 +237,8 @@ export default function Profile() {
                     @
                   </span>
                   <input
-                    id="name"
-                    name="name"
+                    id="username"
+                    name="username"
                     type="text"
                     lang="en"
                     placeholder="bn_alhaitham"
@@ -231,10 +248,6 @@ export default function Profile() {
                         .replace(/\s/g, "");
 
                       setUsername(value);
-                      profileRef.current = {
-                        ...profileRef.current,
-                        username: value,
-                      };
                     }}
                     onInput={(e) => {
                       const inputEvent = e.nativeEvent as InputEvent;
@@ -247,7 +260,7 @@ export default function Profile() {
                         setOnMatchRegex(false);
                       }
                     }}
-                    defaultValue={userName}
+                    defaultValue={username}
                     required
                     className="w-full max-w-xs px-2 py-1.5 text-right  text-gray-900 rounded-md border-0  ring-1 ring-gray-300 ring-inset focus:ring-red-600 focus:ring-1"
                   />
@@ -258,6 +271,78 @@ export default function Profile() {
                   </p>
                 )}
               </div>
+              <div className="flex flex-col min-w-80">
+                <label htmlFor="email" className="text-lg text-gray-700">
+                  البريد الالكتروني
+                  </label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  defaultValue={user?.email!}
+                  placeholder="bn_alhaitham@sahwa.com"
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                  }}
+                  required
+                  className="w-full max-w-xs text-right px-2 py-1.5 text-gray-900 rounded-md border-0 shadow-sm ring-1 ring-gray-300 ring-inset focus:ring-red-600 focus:ring-1 "
+                />
+              </div>
+            
+              <div className="flex flex-col min-w-80">
+                <label htmlFor="country" className="text-lg text-gray-700 mt-2">
+                    البلد 
+                </label>
+                <div className="flex flex-row-reverse items-center gap-x-4">
+                    <Select
+                        className=" w-60 max-w-xs rounded-md text-right ring-gray-300 min-w-80 py-1.5 ring-1 focus:ring-red-600 "
+                        defaultValue={country}
+                        onChange={(e) => {
+                            setCountry(e.target.value as Country);
+                        }}
+                    >
+                    {Object.entries(countries).map(
+                        ([value, viewValue], index) => (
+                        <option key={index} value={value}>
+                            {viewValue}
+                        </option>
+                        )
+                    )}
+                    </Select>
+                </div>
+              </div>
+
+              <div className="flex flex-col min-w-80">
+                <label htmlFor="password" className="text-lg text-gray-700 mt-2">
+                    كلمة العبور
+                </label>
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                  }}
+                  required
+                  className="w-full max-w-xs text-right px-2 py-1.5 text-gray-900 rounded-md border-0 shadow-sm ring-1 ring-gray-300 ring-inset focus:ring-red-600 focus:ring-1 "
+                />
+              </div>
+            
+              <div className="flex flex-col min-w-80">
+                <label htmlFor="password" className="text-lg text-gray-700 mt-2">
+                    تأكيد كلمة العبور   
+                </label>
+                <input
+                  id="confirm_password"
+                  name="confirm_password"
+                  type="password"
+                  onChange={(e) => {
+                    setConfirmPassword(e.target.value);
+                  }}
+                  required
+                  className="w-full max-w-xs text-right px-2 py-1.5 text-gray-900 rounded-md border-0 shadow-sm ring-1 ring-gray-300 ring-inset focus:ring-red-600 focus:ring-1 "
+                />
+            </div>
 
               <div className="flex flex-col min-w-80">
                 <label htmlFor="bio" className=" text-lg text-gray-700">
@@ -271,10 +356,6 @@ export default function Profile() {
                   placeholder="احب الرياضيات و الحاسبات و علوم الكومبيوتر. كما احب التصوير و الرسم و القراءة."
                   onChange={(e) => {
                     setBio(e.target.value);
-                    profileRef.current = {
-                      ...profileRef.current,
-                      bio: e.target.value,
-                    };
                   }}
                   required
                   className="w-full max-w-xs px-2 py-1.5 text-right text-gray-900 rounded-md border-0 shadow-sm  ring-1 ring-gray-300 ring-inset focus:ring-red-600 focus:ring-1 "
@@ -290,19 +371,13 @@ export default function Profile() {
                   defaultValue={dateOfBirth.toDateString()}
                   onChange={(e) => {
                     setDateOfBirth(new Date(e.target.value));
-                    profileRef.current = {
-                      ...profileRef.current,
-                      birthdate: DateTime.fromJSDate(
-                        new Date(e.target.value)
-                      ).toLocaleString(),
-                    };
                   }}
                   required
                   className="w-full max-w-xs px-2 py-1.5 text-right text-gray-900 rounded-md border-0 shadow-sm  ring-1 ring-gray-300 ring-inset focus:ring-red-600 focus:ring-1 "
                 />
               </div>
 
-              <label htmlFor="birthday" className="text-lg text-gray-700 mt-2">
+              <label htmlFor="personality" className="text-lg text-gray-700 mt-2">
                 نوع الشخصية
               </label>
               <div className="flex flex-row-reverse items-center gap-x-4">
@@ -311,16 +386,12 @@ export default function Profile() {
                   defaultValue={selectedPersonalityType}
                   onChange={(e) => {
                     setSelectedPersonalityType(e.target.value);
-                    profileRef.current = {
-                      ...profileRef.current,
-                      personalityType: e.target.value,
-                    };
                   }}
                 >
                   <option selected hidden disabled value="">
                     نوع الشخصية
                   </option>
-                  {Object.values(PersonalityTypes).map(
+                  {Object.values(personalityTypes).map(
                     (personalityType, index) => (
                       <option key={index} value={personalityType}>
                         {personalityType}
@@ -344,10 +415,11 @@ export default function Profile() {
                 <label className="text-lg text-gray-700">الاهتمامات</label>
 
                 <div className="flex justify-end w-full mt-2">
-                  <SearchBar
+                  <SearchBar<Tag>
                     placeholder="ابحث عن اهتمامك هنا"
                     onSearch={onSearch}
-                    searchableContent={[...Interests]}
+                    property="name"
+                    searchableContent={[...interests]}
                   />
                 </div>
                 {selectedInterests.length === 5 && (
@@ -357,50 +429,34 @@ export default function Profile() {
                 )}
                 <div className="flex justify-center items-center min-w-96">
                   <div className="flex flex-wrap justify-center items-center mt-5 min-w-96 gap-3">
-                    {filteredInterests.slice(0, 20).map((interest, key) => (
+                    {filteredInterests.slice(0, 20).map(interest => (
                       <button
-                        key={key}
+                        key={interest.id}
                         type="button"
                         className={`rounded-full min-w-36 w-max ring-2 ring-red-500 p-2 overflow-x-hidden  cursor-pointer ${
-                          !selectedInterests.includes(interest) &&
+                          !selectedInterests?.some(e => e.id === interest.id) &&
                           selectedInterests.length >= 5 &&
                           "cursor-not-allowed"
                         } ${
-                          selectedInterests?.includes(interest)
+                            selectedInterests?.some(e => e.id === interest.id)
                             ? "bg-red-200"
                             : "bg-white"
                         }`}
                         onClick={() => {
                           setSelectedInterests((prev) => {
                             if (prev?.includes(interest)) {
-                              profileRef.current = {
-                                ...profileRef.current,
-                                interests: prev?.filter(
-                                  (value) => value !== interest
-                                ),
-                              };
                               return prev.filter((value) => value !== interest);
                             } else {
                               if (prev?.length < 5) {
-                                profileRef.current = {
-                                  ...profileRef.current,
-                                  interests: prev
-                                    ? [...prev, interest]
-                                    : [interest],
-                                };
                                 return prev ? [...prev, interest] : [interest];
                               } else {
-                                profileRef.current = {
-                                  ...profileRef.current,
-                                  interests: prev,
-                                };
                                 return prev;
                               }
                             }
                           });
                         }}
                       >
-                        {interest}
+                        {interest.name}
                       </button>
                     ))}
                     {!loadMore && (
@@ -415,12 +471,12 @@ export default function Profile() {
                       </div>
                     )}
                     {loadMore &&
-                      filteredInterests.slice(20).map((interest, key) => (
+                      filteredInterests.slice(20).map(interest => (
                         <button
-                          key={key}
+                          key={interest.id}
                           type="button"
                           className={`rounded-full min-w-36 w-max ring-2 ring-red-500 p-2 overflow-x-hidden  cursor-pointer ${
-                            !selectedInterests.includes(interest) &&
+                            !selectedInterests?.some(e => e.id === interest.id) &&
                             selectedInterests.length >= 5 &&
                             "cursor-not-allowed"
                           } ${
@@ -431,38 +487,22 @@ export default function Profile() {
                           onClick={() => {
                             setSelectedInterests((prev) => {
                               if (prev?.includes(interest)) {
-                                profileRef.current = {
-                                  ...profileRef.current,
-                                  interests: prev.filter(
-                                    (value) => value !== interest
-                                  ),
-                                };
                                 return prev.filter(
                                   (value) => value !== interest
                                 );
                               } else {
                                 if (prev?.length < 5) {
-                                  profileRef.current = {
-                                    ...profileRef.current,
-                                    interests: prev
-                                      ? [...prev, interest]
-                                      : [interest],
-                                  };
                                   return prev
                                     ? [...prev, interest]
                                     : [interest];
                                 } else {
-                                  profileRef.current = {
-                                    ...profileRef.current,
-                                    interests: prev,
-                                  };
                                   return prev;
                                 }
                               }
                             });
                           }}
                         >
-                          {interest}
+                          {interest.name}
                         </button>
                       ))}
 
