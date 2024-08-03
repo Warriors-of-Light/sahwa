@@ -18,28 +18,28 @@ export const CourseSchema = z.object({
     .number({ required_error: 'يجب على ثمن الدروة ان يتكون من أرقام' })
     .nullable()
     .refine(
-      (val) => val === null || val >= 0,
+      (val) => val == null || val >= 0,
       'ثمن الدورة يجب أن يكون رقما موجبا'
     ),
   coins_to_win: z
     .number({ required_error: 'يجب على عدد العملات ان يتكون من أرقام' })
     .nullable()
     .refine(
-      (val) => val === null || val >= 0,
+      (val) => val == null || val >= 0,
       'عدد العملات  يجب أن يكون رقما موجبا'
     ),
   thumbnail: z.string(),
-  instructor_id: z.number().positive('يجب ادخل المدرس'),
+  instructor_id: z.number().positive('يجب ادخل المدرس').nullable(),
   tags_ids: z.array(z.number().nonnegative()),
   badges_ids: z.array(z.number().nonnegative()),
   lessons: z.array(LessonSchema),
 })
 export const defaultFormCourse = {
-  cost: undefined,
+  cost: null,
   badges_ids: [],
-  coins_to_win: undefined,
+  coins_to_win: null,
   description: '',
-  instructor_id: undefined,
+  instructor_id: null,
   lessons: [],
   name: '',
   tags_ids: [],

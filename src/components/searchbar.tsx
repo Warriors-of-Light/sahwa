@@ -1,10 +1,10 @@
 import { useCallback } from "react";
 
 interface ISearchBarProps<T> {
-  placeholder: string;
-  searchableContent?: T[];
-  property: string;
-  onSearch: (filteredContent?: T[]) => void;
+  placeholder: string
+  searchableContent?: T[]
+  properties: (keyof T)[] // Changed from single `property` to array of properties
+  onSearch: (filteredContent?: T[]) => void
 }
 
 //The component takes an array of Genric to search upon it's items by a certain property
@@ -15,26 +15,27 @@ interface ISearchBarProps<T> {
 export default function SearchBar<T>({
   placeholder,
   searchableContent,
-  property,
+  properties,
   onSearch,
 }: ISearchBarProps<T>) {
   const handleSearch = useCallback(
     (text: string) => {
-      const filteredContent = searchableContent?.filter((x: any) =>
-        x[property].toLocaleLowerCase().includes(text.toLocaleLowerCase())
-    );
+      const filteredContent = searchableContent?.filter((item) =>
+        properties.some((property) =>
+          item[property]?.toString().toLowerCase().includes(text.toLowerCase())
+        )
+      )
 
-      onSearch(filteredContent);
+      onSearch(filteredContent)
     },
-    [onSearch, searchableContent]
-  );
+    [onSearch, searchableContent, properties]
+  )
 
   return (
     <input
       placeholder={placeholder}
-      width="100%"
-      className="flex py-2 px-1 w-96 text-md text-right pr-3 border-red-600 border-2 rounded-full"
+      className='w-full px-3 py-2 border rounded-md'
       onChange={(e) => handleSearch(e.target.value)}
     />
-  );
+  )
 }

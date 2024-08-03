@@ -1,4 +1,3 @@
-import { inherits } from "util";
 import { Country } from "../enums/country";
 import { PersonalityType } from "../enums/personalityType";
 import { Badge } from "./badge";
