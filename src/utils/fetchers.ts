@@ -1,4 +1,4 @@
-import { Badge, BadgesResponse } from "@/models/interfaces/badge"
+import { Badge, PagedResponse<Badge> } from "@/models/interfaces/badge"
 import { baseUrl } from "@/models/interfaces/baseUrl"
 import { Tag, TagsResponse } from "@/models/interfaces/tag"
 import { UserOut, UserSummary } from "@/models/interfaces/user"
@@ -47,7 +47,7 @@ export const fetchBadges = async (): Promise<Badge[]> => {
     if (!response.ok) {
       throw new Error('Network response was not ok')
     }
-    const result: BadgesResponse = await response.json()
+    const result: PagedResponse<Badge> = await response.json()
     return result.list.map((badge: Badge) => ({
       id: badge.id,
       name: badge.name,

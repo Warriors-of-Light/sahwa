@@ -19,49 +19,33 @@ import {
 } from '@/components/ui/form'
 import { useToast } from '../ui/use-toast'
 import { Input } from '../ui/input'
-import { Textarea } from '../ui/textarea'
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
-import { cn } from '@/lib/utils'
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from '../ui/command'
-import { Check, ChevronsUpDown, ImagePlus } from 'lucide-react'
-import { UserSummary } from '@/models/interfaces/user'
+import { ImagePlus } from 'lucide-react'
+import { UserOut } from '@/models/interfaces/user'
 import { Tag } from '@/models/interfaces/tag'
 import { Badge } from '@/models/interfaces/badge'
 import Image from 'next/image'
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
 
 import { useDropzone } from 'react-dropzone'
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '../ui/dialog'
-import { DndProvider, useDrag, useDrop } from 'react-dnd'
+
+import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
-import { fetchBadges, fetchInstructors, fetchTags } from '@/utils/fetchers'
+
 import { baseUrl } from '@/models/interfaces/baseUrl'
-import Item from '../ui/drop'
+
 import FormFieldName from './FormFieldName'
 import FormFieldCost from './FormFieldCost'
 import FormFieldCoins from './FormFieldCoins'
 import FormFieldDescription from './FormFieldDescription'
-import FormFieldInstructor from './FormFieldInstructor'
+
 import FormFieldTags from './FormFieldTags'
 import FormFieldBadges from './FormFieldBadges'
 import AddLessonDialog from './AddLessonDialog'
-import FormFieldLessons from './FormFieldTags copy'
+import FormFieldLessons from './FormFieldLessons'
+import FormFieldInstructor from './FormFieldInstructor'
+import { get as getInstructor } from '@/services/userService'
+import { get as getBadges } from '@/services/badgesService'
+import { fetchTags } from '@/services/tagService'
 
 export default function CourseForm() {
   const [preview, setPreview] = React.useState<string | ArrayBuffer | null>('')
@@ -72,9 +56,9 @@ export default function CourseForm() {
   const description = 'أدخل تفاصيل الدرس الذي تريد إضافته إلى القائمة'
   const queryClient = useQueryClient()
 
-  const { data: Instructors } = useQuery<UserSummary[]>({
+  const { data: Instructors } = useQuery<UserOut[]>({
     queryKey: ['instructors'],
-    queryFn: fetchInstructors,
+    queryFn: getInstructor,
   })
 
   const { data: tags } = useQuery<Tag[]>({
@@ -84,7 +68,7 @@ export default function CourseForm() {
 
   const { data: badges } = useQuery<Badge[]>({
     queryKey: ['badges'],
-    queryFn: fetchBadges,
+    queryFn: getBadges,
   })
 
   const form = useForm<CourseSchemaType>({
@@ -141,8 +125,8 @@ export default function CourseForm() {
       queryClient.invalidateQueries({ queryKey: ['courses'] })
 
       form.reset()
-      setPreview(null) 
-      form.setValue('thumbnail', '') 
+      setPreview(null)
+      form.setValue('thumbnail', '')
       return toast({
         title: 'نجاح',
         description: 'تم انشاء الدورة بنجاح',
@@ -262,7 +246,7 @@ export default function CourseForm() {
               </FormItem>
             )}
           />
-          <FormFieldLessons  moveItem={moveItem} />
+          <FormFieldLessons moveItem={moveItem} />
           <AddLessonDialog
             showDialog={showDialog}
             setShowDialog={setShowDialog}

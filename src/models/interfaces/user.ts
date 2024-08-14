@@ -1,6 +1,8 @@
 import { Country } from "../enums/country";
 import { PersonalityType } from "../enums/personalityType";
 import { Badge } from "./badge";
+import { BaseResponse } from "./baseResponse";
+import { Tag } from "./tag";
 
 export interface User {
   name: string;
@@ -15,9 +17,7 @@ export interface User {
   roles_ids: number[];
   interests_ids: number[];
 }
-export interface UserOut {
-  message: string | null
-  status: string | null
+export interface UserOut extends BaseResponse  {
   id: number
   first_name: string
   last_name: string
@@ -26,40 +26,17 @@ export interface UserOut {
   birth_date: string
   created_on: string
   roles: Role[]
-  preferences: Preference[]
+  preferences: Tag[]
   badges: Badge[]
   confirmed: boolean
   coins: number
 }
+
+// move role to another file
 export interface Role {
   message: string | null
   status: string | null
   id: number
   name: string
   description: string
-}
-
-export interface Preference {
-  message: string | null
-  status: string | null
-  id: number
-  name: string
-}
-
-
-
-export interface ApiResponse {
-  message: string
-  status: number
-  page_number: number
-  page_size: number
-  total_pages: number
-  total_records: number
-  list: User[]
-}
-
-export interface UserSummary {
-  id: number
-  first_name: string
-  last_name: string
 }
