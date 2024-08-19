@@ -10,6 +10,9 @@ const config = {
 	],
   prefix: "",
   theme: {
+    fontFamily:{
+      "cairo": ["Cairo"]
+    },
     container: {
       center: true,
       padding: "2rem",
@@ -74,7 +77,7 @@ const config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), require("daisyui")],
 } satisfies Config
 
 export default config
